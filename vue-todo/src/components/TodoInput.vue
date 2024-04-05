@@ -4,25 +4,49 @@
     <span class="addContainer" v-on:click="addTodo">
       <i class="addBtn fas fa-plus" aria-hidden="true"></i>
     </span>
+
+    <BaseModal v-if="showModal" @close="showModal = false">
+      <template v-slot:header>
+        <h3>
+          경고!
+          <i class="closeModalBtn fa fa-times" @click="showModal = false">
+        </i>
+        </h3>
+
+      </template>
+      <template v-slot:body>
+        <p>할 일을 입력하세요.</p>
+      </template>
+    </BaseModal>
   </div>
 </template>
 
 <script>
+import BaseModal from './common/BaseModal.vue'
+
 export default {
   data: function() {
     return {
-      newTodoItem: ""
+      newTodoItem: "",
+      showModal: false
     }
   },
   methods: {
     addTodo: function() {
-      console.log(this.newTodoItem);
-      localStorage.setItem(this.newTodoItem, this.newTodoItem);
-      this.clearInput();
+      if (this.newTodoItem !== '') {
+        this.$emit('addTodoItem', this.newTodoItem)
+        this.clearInput();
+      } else {
+        console.log("1");
+        this.showModal = !this.showModal;
+      }
     },
     clearInput: function() {
       this.newTodoItem = '';
     }
+  },
+  components: {
+    'BaseModal': BaseModal
   }
 }
 </script>
@@ -51,5 +75,8 @@ input:focus {
 .addBtn {
   color: white;
   vertical-align: middle;
+}
+.closeModalBtn {
+  color: #42b983;
 }
 </style>

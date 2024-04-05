@@ -1,9 +1,11 @@
 <template>
   <div id="app">
     <TodoHeader></TodoHeader>
-    <TodoInput></TodoInput>
-    <TodoList></TodoList>
-    <TodoFooter></TodoFooter>
+    <!-- <TodoInput v-on:하위 컴포넌트에서 발생시킨 이벤트 이름="현재 컴포넌트의 메소드 명"></TodoInput> -->
+    <TodoInput v-on:addTodoItem="addOneItem"></TodoInput>
+    <!-- <TodoList v-bind:내려보낼 프롭스 속성 이름="내려보낼 속성"></TodoList> -->
+    <TodoList v-bind:propsdata="todoItems" v-on:removeItem="removeOneItem" v-on:toggleItem="toggleOneItem"></TodoList>
+    <TodoFooter v-on:clearAll="clearAllItems"></TodoFooter>
   </div>
 </template>
 
@@ -13,18 +15,45 @@ import TodoInput from './components/TodoInput.vue'
 import TodoList from './components/TodoList.vue'
 import TodoFooter from './components/TodoFooter.vue'
 
-// var my_cmp = {
-//   template: '<div>my component</div>'
-// };
-
-// new Vue({
-//   el: '',
-//   components: {
-//     'my-cmp': my_cmp
-//   }
-// });
-
 export default {
+  data: function() {
+    return {
+      todoItems: []
+    }
+  },
+  methods: {
+    addOneItem: function(todoItem) {
+      var obj = {completed: false, item: todoItem};
+      localStorage.setItem(todoItem, JSON.stringify(obj));
+      this.todoItems.push(obj);
+    },
+    removeOneItem: function(todoItem, index) {
+      localStorage.removeItem(todoItem.item);
+      this.todoItems.splice(index, 1);
+    },
+    toggleOneItem: function(todoItem, index) {
+      // todoItem.completed = !todoItem.completed;
+      this.todoItems[index].completed = !this.todoItems[index].completed;
+      //로컬스토리지 데이터 갱신
+      localStorage.removeItem(todoItem.item);
+      localStorage.setItem(todoItem.item, JSON.stringify(todoItem));
+    },
+    clearAllItems: function() {
+      localStorage.clear();
+      this.todoItems = [];
+    }
+  },
+  created: function() {
+    if (localStorage.length > 0) {
+      for (var i = 0; i < localStorage.length; i++) {
+        if (localStorage.key(i) !== 'loglevel:webpack-dev-server') {
+          // console.log(JSON.parse(localStorage.getItem(localStorage.key(i))));
+          this.todoItems.push(JSON.parse(localStorage.getItem(localStorage.key(i))))
+        }
+        // console.log(localStorage.key(i));
+      }
+    }
+  },
   components: {
     // 컴포넌트 태그명 : 컴포넌트 내용
     'TodoHeader': TodoHeader,
