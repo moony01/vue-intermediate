@@ -12,7 +12,6 @@
           <i class="closeModalBtn fa fa-times" @click="showModal = false">
         </i>
         </h3>
-
       </template>
       <template v-slot:body>
         <p>할 일을 입력하세요.</p>
