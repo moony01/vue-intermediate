@@ -1,4 +1,6 @@
 import { createStore } from "vuex";
+import * as getters from './getters';
+import * as mutations from './mutations'
 
 const storage = {
   fetch() {
@@ -18,27 +20,8 @@ const store = createStore({
   state: {
     todoItems: storage.fetch()
   },
-  mutations: {
-    addOneItem(state, todoItem) {
-      // console.log('received');
-      const obj = { completed: false, item: todoItem };
-      localStorage.setItem(todoItem, JSON.stringify(obj));
-      state.todoItems.push(obj);
-    },
-    removeOneItem(state, payload) {
-      localStorage.removeItem(payload.todoItem.item);
-      state.todoItems.splice(payload.index, 1); 
-    },
-    toggleOneItem(state, payload) {
-      state.todoItems[payload.index].completed = !state.todoItems[payload.index].completed;
-      localStorage.removeItem(payload.todoItem.item);
-      localStorage.setItem(payload.todoItem.item, JSON.stringify(payload.todoItem));
-    },
-    clearAllItems(state) {
-      localStorage.clear();
-      state.todoItems = [];
-    },
-  }
+  getters,
+  mutations
 });
 
 export { store };
