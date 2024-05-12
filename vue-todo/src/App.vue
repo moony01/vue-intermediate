@@ -4,6 +4,7 @@
     <TodoInput></TodoInput>
     <TodoList></TodoList>
     <TodoFooter></TodoFooter>
+    
     <!-- <TodoInput v-on:하위 컴포넌트에서 발생시킨 이벤트 이름="현재 컴포넌트의 메소드 명"></TodoInput> -->
     <!-- <TodoList v-bind:내려보낼 프롭스 속성 이름="내려보낼 속성"></TodoList> -->
   </div>
